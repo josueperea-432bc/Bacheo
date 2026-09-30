@@ -1,0 +1,143 @@
+﻿.consulta-error {
+  margin-top: 18px;
+  padding: 13px 15px;
+  border-left: 4px solid #a57f2c;
+  background: #faf3e5;
+  color: #664b20;
+}
+
+.consulta-resultado {
+  margin-top: 25px;
+  padding: 25px;
+  border-top: 5px solid #235b4e;
+  background: #ffffff;
+  box-shadow: 0 8px 25px rgba(0,0,0,.07);
+}
+
+.resultado-header,
+.estado-actual {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.resultado-header span,
+.estado-actual {
+  color: #666;
+  font-size: 13px;
+}
+
+.resultado-header strong {
+  color: #611232;
+  font-family: Georgia, serif;
+  font-size: 21px;
+}
+
+.estado-actual {
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid #dedede;
+}
+
+.estado-actual strong {
+  color: #235b4e;
+}
+
+.estado-pasos {
+  margin: 28px 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.paso {
+  padding: 13px;
+  text-align: center;
+  border: 1px solid #d4d4d4;
+  color: #999;
+}
+
+.paso span {
+  width: 27px;
+  height: 27px;
+  margin: 0 auto 7px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #ddd;
+}
+
+.paso strong {
+  display: block;
+  font-size: 12px;
+}
+
+.paso.activo {
+  border-color: #235b4e;
+  background: #eef5f3;
+  color: #235b4e;
+}
+
+.paso.activo span {
+  background: #235b4e;
+  color: white;
+}
+
+.resultado-datos {
+  display: grid;
+  gap: 13px;
+}
+
+.resultado-datos p {
+  margin: 0;
+  padding: 12px 0;
+  border-top: 1px solid #eeeeee;
+}
+
+.resultado-datos span,
+.resultado-datos strong {
+  display: block;
+}
+
+.resultado-datos span {
+  margin-bottom: 4px;
+  color: #777;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.resultado-datos strong {
+  color: #333;
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .estado-pasos {
+    grid-template-columns: 1fr;
+  }
+}
+
+.reporte-fotografia {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid #eeeeee;
+}
+
+.reporte-fotografia > span {
+  display: block;
+  margin-bottom: 10px;
+  color: #777777;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.reporte-fotografia img {
+  width: 100%;
+  max-height: 340px;
+  display: block;
+  object-fit: cover;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+}

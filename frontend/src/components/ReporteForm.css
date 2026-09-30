@@ -1,0 +1,482 @@
+﻿:root {
+  --gob-vino: #611232;
+  --gob-vino-oscuro: #4a0e27;
+  --gob-vino-claro: #7a1f46;
+
+  --gob-dorado: #a57f2c;
+  --gob-dorado-claro: #d6c19a;
+
+  --gob-verde: #235b4e;
+  --gob-verde-claro: #2f7465;
+
+  --gob-fondo: #f6f5f3;
+  --gob-gris: #6f7271;
+  --gob-borde: #d8d4ce;
+
+  --texto-principal: #222222;
+  --blanco: #ffffff;
+}
+
+/* ==========================================
+   CONTENEDOR GENERAL
+   ========================================== */
+
+.report-form-section {
+  position: relative;
+  padding: 85px 20px 95px;
+  background:
+    linear-gradient(
+      180deg,
+      #f2efeb 0%,
+      #f7f6f4 240px,
+      #ffffff 100%
+    );
+}
+
+.report-form-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background:
+    linear-gradient(
+      90deg,
+      var(--gob-vino) 0%,
+      var(--gob-vino) 65%,
+      var(--gob-dorado) 65%,
+      var(--gob-dorado) 100%
+    );
+}
+
+.report-form-header {
+  width: min(980px, 100%);
+  margin: 0 auto 36px;
+}
+
+.report-form-header .eyebrow {
+  margin: 0 0 9px;
+  color: var(--gob-vino);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.report-form-header h2 {
+  margin: 0;
+  color: var(--texto-principal);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 42px;
+  line-height: 1.1;
+  font-weight: 500;
+}
+
+.report-form-header > p:last-child {
+  max-width: 760px;
+  margin: 15px 0 0;
+  color: #5b5b5b;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ==========================================
+   FORMULARIO PRINCIPAL
+   ========================================== */
+
+.report-form {
+  width: min(980px, 100%);
+  margin: 0 auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #d8d4ce;
+  border-radius: 7px;
+  background: var(--blanco);
+  box-shadow:
+    0 18px 55px rgba(57, 26, 35, 0.09);
+}
+
+/* ==========================================
+   SECCIONES
+   ========================================== */
+
+.report-form fieldset {
+  margin: 0;
+  padding: 35px 38px 40px;
+  border: 0;
+  border-bottom: 1px solid #e5e2de;
+  background: #ffffff;
+}
+
+.report-form fieldset:nth-of-type(2) {
+  background: #fcfbfa;
+}
+
+.report-form fieldset:last-of-type {
+  border-bottom: 0;
+}
+
+.report-form legend {
+  width: calc(100% + 76px);
+  margin-left: -38px;
+  padding: 18px 38px;
+  background: var(--gob-vino);
+  color: var(--blanco);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+/* ==========================================
+   CAMPOS
+   ========================================== */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.report-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #353535;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.report-form input[type="text"],
+.report-form input[type="tel"],
+.report-form input[type="email"],
+.report-form input[type="file"],
+.report-form textarea {
+  width: 100%;
+  min-height: 47px;
+  padding: 12px 14px;
+  border: 1px solid #bcb9b4;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #252525;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.report-form input:hover,
+.report-form textarea:hover {
+  border-color: #8b8883;
+}
+
+.report-form input:focus,
+.report-form textarea:focus {
+  border-color: var(--gob-vino);
+  box-shadow:
+    0 0 0 3px rgba(97, 18, 50, 0.10);
+}
+
+.report-form textarea {
+  min-height: 130px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+/* ==========================================
+   GPS
+   ========================================== */
+
+.gps-button {
+  min-height: 46px;
+  margin-bottom: 20px;
+  padding: 11px 21px;
+  border: 1px solid var(--gob-verde);
+  border-radius: 4px;
+  background: var(--gob-verde);
+  color: var(--blanco);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.gps-button::before {
+  content: '⌖ ';
+}
+
+.gps-button:hover {
+  background: var(--gob-verde-claro);
+}
+
+.location-result {
+  margin: 0 0 24px;
+  padding: 14px 17px;
+  border-left: 5px solid var(--gob-verde);
+  background: #eff5f3;
+  color: #314943;
+  font-size: 14px;
+}
+
+/* ==========================================
+   ARCHIVO / FOTOGRAFÍA
+   ========================================== */
+
+.report-form input[type="file"] {
+  padding: 10px;
+  border: 2px dashed #b9b1a5;
+  background: #faf9f7;
+}
+
+.report-form input[type="file"]::file-selector-button {
+  margin-right: 13px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 3px;
+  background: var(--gob-vino);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.selected-file {
+  margin: 11px 0 23px;
+  padding: 12px 15px;
+  border-left: 4px solid var(--gob-dorado);
+  background: #f7f3e9;
+  color: #514a3c;
+  font-size: 13px;
+}
+
+/* ==========================================
+   CONTADOR
+   ========================================== */
+
+.character-count {
+  align-self: flex-end;
+  margin-top: -3px;
+  color: #777777;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* ==========================================
+   SEVERIDAD
+   ========================================== */
+
+.severity-block {
+  margin-top: 27px;
+}
+
+.severity-block > span {
+  display: block;
+  margin-bottom: 13px;
+  color: #333333;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.severity-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 13px;
+}
+
+.severity-options label {
+  min-height: 54px;
+  padding: 14px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid #d4d0cb;
+  border-radius: 4px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.severity-options label:hover {
+  border-color: var(--gob-vino);
+  background: #f9f2f5;
+}
+
+.severity-options input[type="radio"] {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--gob-vino);
+}
+
+/* ==========================================
+   MENSAJES
+   ========================================== */
+
+.form-message,
+.form-success {
+  margin: 30px 38px 0;
+  padding: 18px 20px;
+  border-radius: 4px;
+  line-height: 1.55;
+}
+
+.form-message {
+  border-left: 5px solid var(--gob-dorado);
+  background: #faf6ec;
+  color: #5c4c2e;
+}
+
+.form-success {
+  border-left: 5px solid var(--gob-verde);
+  background: #eef6f3;
+  color: #284940;
+}
+
+.generated-folio {
+  margin-top: 17px;
+  padding-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-top: 1px solid rgba(35, 91, 78, 0.2);
+}
+
+.generated-folio span {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.generated-folio strong {
+  color: var(--gob-vino);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 29px;
+  letter-spacing: 1px;
+}
+
+/* ==========================================
+   BOTÓN PRINCIPAL
+   ========================================== */
+
+.submit-report {
+  width: calc(100% - 76px);
+  min-height: 55px;
+  margin: 30px 38px 38px;
+  border: 0;
+  border-radius: 4px;
+  background:
+    linear-gradient(
+      90deg,
+      var(--gob-vino),
+      var(--gob-vino-oscuro)
+    );
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 750;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  box-shadow:
+    0 6px 18px rgba(97, 18, 50, 0.18);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.submit-report:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 8px 22px rgba(97, 18, 50, 0.26);
+}
+
+.submit-report:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 720px) {
+  .report-form-section {
+    padding: 55px 14px 70px;
+  }
+
+  .report-form-header h2 {
+    font-size: 32px;
+  }
+
+  .report-form fieldset {
+    padding: 28px 18px 32px;
+  }
+
+  .report-form legend {
+    width: calc(100% + 36px);
+    margin-left: -18px;
+    padding: 16px 18px;
+    font-size: 18px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .severity-options {
+    grid-template-columns: 1fr;
+  }
+
+  .form-message,
+  .form-success {
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+
+  .submit-report {
+    width: calc(100% - 36px);
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+}
+
+.photo-preview {
+  margin: 16px 0 25px;
+  padding: 16px;
+  border: 1px solid #dedede;
+  background: #f8f8f8;
+}
+
+.photo-preview > span {
+  display: block;
+  margin-bottom: 10px;
+  color: #611232;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.photo-preview img {
+  width: 100%;
+  max-height: 350px;
+  display: block;
+  object-fit: contain;
+  background: #eeeeee;
+  border-radius: 4px;
+}
+
+.photo-preview button {
+  margin-top: 12px;
+  padding: 9px 14px;
+  border: 1px solid #611232;
+  border-radius: 4px;
+  background: white;
+  color: #611232;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.photo-preview button:hover {
+  background: #f8f1f3;
+}
