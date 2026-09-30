@@ -1,5 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
+import { API_URL } from '../config';
 import './ReporteForm.css';
 
 type Severidad = 'Baja' | 'Media' | 'Alta';
@@ -147,7 +148,7 @@ export default function ReporteForm() {
       );
 
       const respuestaFoto = await fetch(
-        'http://localhost:3000/reportes/fotografia',
+        `${API_URL}/reportes/fotografia`,
         {
           method: 'POST',
           body: datosFoto,
@@ -211,7 +212,7 @@ export default function ReporteForm() {
         await subirFotografia();
 
       const respuesta = await fetch(
-        'http://localhost:3000/reportes',
+        `${API_URL}/reportes`,
         {
           method: 'POST',
           headers: {
@@ -556,3 +557,4 @@ export default function ReporteForm() {
     </section>
   );
 }
+

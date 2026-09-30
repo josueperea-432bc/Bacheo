@@ -6,6 +6,7 @@ import {
   Navigate,
   useNavigate,
 } from 'react-router-dom';
+import { API_URL } from '../config';
 import './CuadrillaPage.css';
 
 interface UsuarioSesion {
@@ -101,7 +102,7 @@ export default function CuadrillaPage() {
 
     try {
       const respuesta = await fetch(
-        'http://localhost:3000/reportes/mis-asignados',
+        `${API_URL}/reportes/mis-asignados`,
         {
           headers: {
             Authorization:
@@ -209,7 +210,7 @@ export default function CuadrillaPage() {
 
         const respuesta =
           await fetch(
-            `http://localhost:3000/reportes/${seleccionado.id}/evidencias/reparacion`,
+            `${API_URL}/reportes/${seleccionado.id}/evidencias/reparacion`,
             {
               method: 'POST',
 
@@ -549,7 +550,7 @@ export default function CuadrillaPage() {
                 <div className="crew-photos">
                   {seleccionado.fotografia && (
                     <img
-                      src={`http://localhost:3000/${seleccionado.fotografia}`}
+                      src={`${API_URL}/${seleccionado.fotografia}`}
                       alt="Fotografía ciudadana"
                     />
                   )}
@@ -558,7 +559,7 @@ export default function CuadrillaPage() {
                     (foto) => (
                       <img
                         key={foto.id}
-                        src={`http://localhost:3000/${foto.ruta}`}
+                        src={`${API_URL}/${foto.ruta}`}
                         alt="Evidencia del daño"
                       />
                     ),
@@ -589,7 +590,7 @@ export default function CuadrillaPage() {
                           key={
                             foto.id
                           }
-                          src={`http://localhost:3000/${foto.ruta}`}
+                          src={`${API_URL}/${foto.ruta}`}
                           alt="Fotografía de reparación"
                         />
                       ),
@@ -684,3 +685,4 @@ export default function CuadrillaPage() {
     </div>
   );
 }
+

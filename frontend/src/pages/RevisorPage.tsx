@@ -7,6 +7,7 @@ import {
   Navigate,
   useNavigate,
 } from 'react-router-dom';
+import { API_URL } from '../config';
 import './RevisorPage.css';
 
 type EstadoReporte =
@@ -112,7 +113,7 @@ export default function RevisorPage() {
 
     try {
       const respuesta = await fetch(
-        'http://localhost:3000/reportes',
+        `${API_URL}/reportes`,
         {
           headers: {
             Authorization:
@@ -252,7 +253,7 @@ export default function RevisorPage() {
 
     try {
       const respuesta = await fetch(
-        `http://localhost:3000/reportes/${seleccionado.id}/estado`,
+        `${API_URL}/reportes/${seleccionado.id}/estado`,
         {
           method: 'PATCH',
 
@@ -319,7 +320,7 @@ export default function RevisorPage() {
 
     try {
       const respuesta = await fetch(
-        `http://localhost:3000/reportes/${seleccionado.id}/terminar`,
+        `${API_URL}/reportes/${seleccionado.id}/terminar`,
         {
           method: 'PATCH',
 
@@ -705,7 +706,7 @@ export default function RevisorPage() {
 
                   {seleccionado.fotografia ? (
                     <img
-                      src={`http://localhost:3000/${seleccionado.fotografia}`}
+                      src={`${API_URL}/${seleccionado.fotografia}`}
                       alt={`Evidencia del reporte ${seleccionado.folio}`}
                     />
                   ) : fotosDanio.length >
@@ -717,7 +718,7 @@ export default function RevisorPage() {
                             key={
                               foto.id
                             }
-                            src={`http://localhost:3000/${foto.ruta}`}
+                            src={`${API_URL}/${foto.ruta}`}
                             alt="Evidencia del daño"
                           />
                         ),
@@ -746,7 +747,7 @@ export default function RevisorPage() {
                                 key={
                                   foto.id
                                 }
-                                src={`http://localhost:3000/${foto.ruta}`}
+                                src={`${API_URL}/${foto.ruta}`}
                                 alt="Evidencia adicional del daño"
                               />
                             ),
@@ -1017,12 +1018,12 @@ export default function RevisorPage() {
                       (foto) => (
                         <a
                           key={foto.id}
-                          href={`http://localhost:3000/${foto.ruta}`}
+                          href={`${API_URL}/${foto.ruta}`}
                           target="_blank"
                           rel="noreferrer"
                         >
                           <img
-                            src={`http://localhost:3000/${foto.ruta}`}
+                            src={`${API_URL}/${foto.ruta}`}
                             alt="Evidencia de reparación"
                           />
                         </a>
@@ -1179,3 +1180,4 @@ export default function RevisorPage() {
     </div>
   );
 }
+

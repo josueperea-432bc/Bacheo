@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { API_URL } from '../config';
 import './ConsultaReporte.css';
 
 interface Reporte {
@@ -37,7 +38,7 @@ export default function ConsultaReporte() {
       setReporte(null);
 
       const respuesta = await fetch(
-        `http://localhost:3000/reportes/consulta/${encodeURIComponent(
+        `${API_URL}/reportes/consulta/${encodeURIComponent(
           folioLimpio,
         )}`,
       );
@@ -168,7 +169,7 @@ export default function ConsultaReporte() {
               <span>Evidencia fotográfica</span>
 
               <img
-                src={`http://localhost:3000/${reporte.fotografia}`}
+                src={`${API_URL}/${reporte.fotografia}`}
                 alt={`Fotografía del reporte ${reporte.folio}`}
               />
             </div>
@@ -178,3 +179,4 @@ export default function ConsultaReporte() {
     </div>
   );
 }
+

@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../config';
 import './AccesoPersonal.css';
 
 interface UsuarioSesion {
@@ -43,7 +44,7 @@ export default function AccesoPersonal() {
     setCargando(true);
 
     try {
-      const respuesta = await fetch('http://localhost:3000/auth/login', {
+      const respuesta = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -243,6 +244,7 @@ export default function AccesoPersonal() {
     </section>
   );
 }
+
 
 
 

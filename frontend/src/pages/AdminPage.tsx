@@ -9,6 +9,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import MapaReportes from '../components/MapaReportes';
+import { API_URL } from '../config';
 import './AdminPage.css';
 
 type EstadoReporte =
@@ -118,7 +119,7 @@ export default function AdminPage() {
 
     try {
       const respuesta = await fetch(
-        'http://localhost:3000/reportes',
+        `${API_URL}/reportes`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -160,7 +161,7 @@ export default function AdminPage() {
 
     try {
       const respuesta = await fetch(
-        'http://localhost:3000/cuadrillas',
+        `${API_URL}/cuadrillas`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -216,7 +217,7 @@ export default function AdminPage() {
 
     try {
       const respuesta = await fetch(
-        'http://localhost:3000/cuadrillas',
+        `${API_URL}/cuadrillas`,
         {
           method: 'POST',
 
@@ -274,7 +275,7 @@ export default function AdminPage() {
 
     try {
       const respuesta = await fetch(
-        `http://localhost:3000/reportes/${reporteId}/cuadrilla`,
+        `${API_URL}/reportes/${reporteId}/cuadrilla`,
         {
           method: 'PATCH',
 
@@ -333,7 +334,7 @@ export default function AdminPage() {
 
     try {
       const respuesta = await fetch(
-        `http://localhost:3000/reportes/${id}/estado`,
+        `${API_URL}/reportes/${id}/estado`,
         {
           method: 'PATCH',
 
@@ -485,13 +486,13 @@ export default function AdminPage() {
                   <td>
                     {reporte.fotografia ? (
                       <a
-                        href={`http://localhost:3000/${reporte.fotografia}`}
+                        href={`${API_URL}/${reporte.fotografia}`}
                         target="_blank"
                         rel="noreferrer"
                       >
                         <img
                           className="admin-report-photo"
-                          src={`http://localhost:3000/${reporte.fotografia}`}
+                          src={`${API_URL}/${reporte.fotografia}`}
                           alt={`Bache ${reporte.folio}`}
                         />
                       </a>
@@ -1133,3 +1134,4 @@ export default function AdminPage() {
     </div>
   );
 }
+
