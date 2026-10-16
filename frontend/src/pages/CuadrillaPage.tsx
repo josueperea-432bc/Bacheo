@@ -445,7 +445,7 @@ export default function CuadrillaPage() {
                   <dl>
                     <div>
                       <dt>
-                        Severidad
+                        Afectación
                       </dt>
 
                       <dd>
@@ -685,4 +685,7 @@ export default function CuadrillaPage() {
     </div>
   );
 }
+
+
+
 

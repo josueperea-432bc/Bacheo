@@ -558,3 +558,82 @@
     display: none;
   }
 }
+
+/* REPORTES AGRUPADOS */
+
+.group-comments-heading {
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.group-comments-heading p {
+  margin: 0 0 4px;
+  color: #611232;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.group-comments-heading h3 {
+  margin: 0;
+}
+
+.group-comments-heading > span {
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: #f7eef1;
+  color: #611232;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.citizen-comments {
+  display: grid;
+  gap: 12px;
+}
+
+.citizen-comment {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-left: 4px solid #a57f2c;
+  background: #fafafa;
+}
+
+.citizen-comment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.citizen-comment-header strong {
+  color: #611232;
+}
+
+.citizen-comment-header span {
+  padding: 4px 9px;
+  border-radius: 15px;
+  background: #eee;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.citizen-comment small {
+  display: block;
+  margin-top: 5px;
+  color: #777;
+}
+
+.citizen-comment p {
+  margin: 10px 0;
+}
+
+.citizen-comment a {
+  color: #235b4e;
+  font-size: 12px;
+  font-weight: 700;
+}
+

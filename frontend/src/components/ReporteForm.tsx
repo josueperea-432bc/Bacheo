@@ -3,7 +3,6 @@ import type { FormEvent } from 'react';
 import { API_URL } from '../config';
 import './ReporteForm.css';
 
-type Severidad = 'Baja' | 'Media' | 'Alta';
 
 interface FormularioReporte {
   telefono: string;
@@ -14,7 +13,6 @@ interface FormularioReporte {
   entreCalles: string;
   colonia: string;
   descripcion: string;
-  severidad: Severidad;
 }
 
 interface RespuestaReporte {
@@ -38,7 +36,6 @@ export default function ReporteForm() {
       entreCalles: '',
       colonia: '',
       descripcion: '',
-      severidad: 'Media',
     });
 
   const [foto, setFoto] = useState<File | null>(null);
@@ -244,8 +241,6 @@ export default function ReporteForm() {
             descripcion:
               formulario.descripcion,
 
-            severidad:
-              formulario.severidad,
 
             fotografia:
               rutaFotografia,
@@ -279,7 +274,6 @@ export default function ReporteForm() {
         entreCalles: '',
         colonia: '',
         descripcion: '',
-        severidad: 'Media',
       });
 
       setFoto(null);
@@ -450,38 +444,6 @@ export default function ReporteForm() {
             </span>
           </label>
 
-          <div className="severity-block">
-            <span>Nivel de severidad</span>
-
-            <div className="severity-options">
-              {(
-                [
-                  'Baja',
-                  'Media',
-                  'Alta',
-                ] as Severidad[]
-              ).map((nivel) => (
-                <label key={nivel}>
-                  <input
-                    type="radio"
-                    name="severidad"
-                    value={nivel}
-                    checked={
-                      formulario.severidad === nivel
-                    }
-                    onChange={() =>
-                      actualizarCampo(
-                        'severidad',
-                        nivel,
-                      )
-                    }
-                  />
-
-                  {nivel}
-                </label>
-              ))}
-            </div>
-          </div>
         </fieldset>
 
         <fieldset>
@@ -557,4 +519,5 @@ export default function ReporteForm() {
     </section>
   );
 }
+
 

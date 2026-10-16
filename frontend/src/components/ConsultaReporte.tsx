@@ -153,10 +153,6 @@ export default function ConsultaReporte() {
               </strong>
             </p>
 
-            <p>
-              <span>Severidad</span>
-              <strong>{reporte.severidad}</strong>
-            </p>
 
             <p>
               <span>Descripción</span>
@@ -179,4 +175,5 @@ export default function ConsultaReporte() {
     </div>
   );
 }
+
 

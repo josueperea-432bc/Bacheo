@@ -61,10 +61,33 @@ interface Reporte {
   estado: EstadoReporte;
   fechaReporte: string;
   fechaAtencion: string | null;
+  cantidadReportes?: number;
+  reportesCiudadanos?: ReporteCiudadanoGrupo[];
   cuadrilla: Cuadrilla | null;
   evidencias: Evidencia[];
 }
 
+interface ReporteCiudadanoGrupo {
+  id: number;
+  folio: string;
+  descripcion: string;
+  fotografia: string | null;
+  fechaReporte: string;
+  severidad: 'Alta' | 'Media' | 'Baja';
+}
+
+type PrioridadReporte =
+  | 'Normal'
+  | 'Media'
+  | 'Alta'
+  | 'Urgente';
+
+type OrdenReportes =
+  | 'recientes'
+  | 'antiguos'
+  | 'reportados'
+  | 'prioridad'
+  | 'afectacion';
 export default function AdminPage() {
   const navigate = useNavigate();
 
@@ -83,6 +106,30 @@ export default function AdminPage() {
   const [error, setError] =
     useState('');
 
+  const [busqueda, setBusqueda] =
+    useState('');
+
+  const [filtroEstado, setFiltroEstado] =
+    useState('Todos');
+
+  const [
+    filtroAfectacion,
+    setFiltroAfectacion,
+  ] = useState('Todas');
+
+  const [
+    filtroPrioridad,
+    setFiltroPrioridad,
+  ] = useState('Todas');
+
+  const [
+    filtroCantidad,
+    setFiltroCantidad,
+  ] = useState('Todos');
+
+  const [ordenReportes, setOrdenReportes] =
+    useState<OrdenReportes>('recientes');
+
   const [mensajeCuadrilla, setMensajeCuadrilla] =
     useState('');
 
@@ -92,6 +139,11 @@ export default function AdminPage() {
       responsable: '',
       telefono: '',
     });
+
+  const [
+    cuadrillaEditando,
+    setCuadrillaEditando,
+  ] = useState<number | null>(null);
 
   const token =
     sessionStorage.getItem('accessToken');
@@ -215,31 +267,56 @@ export default function AdminPage() {
       return;
     }
 
+    const editando =
+      cuadrillaEditando !== null;
+
     try {
+      const url =
+        editando
+          ? `${API_URL}/cuadrillas/${cuadrillaEditando}`
+          : `${API_URL}/cuadrillas`;
+
       const respuesta = await fetch(
-        `${API_URL}/cuadrillas`,
+        url,
         {
-          method: 'POST',
+          method:
+            editando
+              ? 'PATCH'
+              : 'POST',
 
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+            'Content-Type':
+              'application/json',
+
+            Authorization:
+              `Bearer ${token}`,
           },
 
           body: JSON.stringify({
             nombre:
               nuevaCuadrilla.nombre,
+
             responsable:
               nuevaCuadrilla.responsable,
+
             telefono:
-              nuevaCuadrilla.telefono || undefined,
+              nuevaCuadrilla.telefono ||
+              undefined,
           }),
         },
       );
 
+      const datos =
+        await respuesta.json();
+
       if (!respuesta.ok) {
         throw new Error(
-          'No fue posible registrar la cuadrilla.',
+          datos.message ||
+            (
+              editando
+                ? 'No fue posible modificar la cuadrilla.'
+                : 'No fue posible registrar la cuadrilla.'
+            ),
         );
       }
 
@@ -249,8 +326,14 @@ export default function AdminPage() {
         telefono: '',
       });
 
+      setCuadrillaEditando(
+        null,
+      );
+
       setMensajeCuadrilla(
-        'Cuadrilla registrada correctamente.',
+        editando
+          ? 'Cuadrilla modificada correctamente.'
+          : 'Cuadrilla registrada correctamente.',
       );
 
       await cargarCuadrillas();
@@ -258,11 +341,111 @@ export default function AdminPage() {
       setError(
         err instanceof Error
           ? err.message
-          : 'Error al registrar la cuadrilla.',
+          : 'Error al guardar la cuadrilla.',
       );
     }
   };
 
+  const iniciarEdicionCuadrilla = (
+    cuadrilla: Cuadrilla,
+  ) => {
+    setError('');
+    setMensajeCuadrilla('');
+
+    setCuadrillaEditando(
+      cuadrilla.id,
+    );
+
+    setNuevaCuadrilla({
+      nombre:
+        cuadrilla.nombre,
+
+      responsable:
+        cuadrilla.responsable,
+
+      telefono:
+        cuadrilla.telefono ?? '',
+    });
+  };
+
+  const cancelarEdicionCuadrilla = () => {
+    setCuadrillaEditando(
+      null,
+    );
+
+    setNuevaCuadrilla({
+      nombre: '',
+      responsable: '',
+      telefono: '',
+    });
+
+    setError('');
+  };
+
+  const eliminarCuadrilla = async (
+    cuadrilla: Cuadrilla,
+  ) => {
+    if (!token) {
+      return;
+    }
+
+    const confirmar =
+      window.confirm(
+        `¿Deseas eliminar la cuadrilla "${cuadrilla.nombre}"?`,
+      );
+
+    if (!confirmar) {
+      return;
+    }
+
+    setError('');
+    setMensajeCuadrilla('');
+
+    try {
+      const respuesta =
+        await fetch(
+          `${API_URL}/cuadrillas/${cuadrilla.id}/baja`,
+          {
+            method: 'PATCH',
+
+            headers: {
+              Authorization:
+                `Bearer ${token}`,
+            },
+          },
+        );
+
+      const datos =
+        await respuesta.json();
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.message ||
+            'No fue posible eliminar la cuadrilla.',
+        );
+      }
+
+      if (
+        cuadrillaEditando ===
+        cuadrilla.id
+      ) {
+        cancelarEdicionCuadrilla();
+      }
+
+      setMensajeCuadrilla(
+        'Cuadrilla eliminada correctamente.',
+      );
+
+      await cargarCuadrillas();
+      await cargarReportes();
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Error al eliminar la cuadrilla.',
+      );
+    }
+  };
   const asignarCuadrilla = async (
     reporteId: number,
     cuadrillaId: number,
@@ -383,6 +566,261 @@ export default function AdminPage() {
     }
   };
 
+  const cantidadReportesDe = (
+    reporte: Reporte,
+  ): number => {
+    return Math.max(
+      1,
+      reporte.cantidadReportes ??
+        reporte.reportesCiudadanos?.length ??
+        1,
+    );
+  };
+
+  const obtenerPrioridad = (
+    reporte: Reporte,
+  ): PrioridadReporte => {
+    const cantidad =
+      cantidadReportesDe(reporte);
+
+    if (cantidad >= 7) {
+      return 'Urgente';
+    }
+
+    if (cantidad >= 4) {
+      return 'Alta';
+    }
+
+    if (cantidad >= 2) {
+      return 'Media';
+    }
+
+    return 'Normal';
+  };
+
+  const textoAfectacion = (
+    severidad: Reporte['severidad'],
+  ): string => {
+    switch (severidad) {
+      case 'Alta':
+        return 'Crítica';
+
+      case 'Media':
+        return 'Moderada';
+
+      case 'Baja':
+        return 'Leve';
+
+      default:
+        return severidad;
+    }
+  };
+
+  const normalizarBusqueda = (
+    valor?: string | null,
+  ): string => {
+    return (valor ?? '')
+      .normalize('NFD')
+      .replace(
+        /[\u0300-\u036f]/g,
+        '',
+      )
+      .toLowerCase()
+      .trim();
+  };
+
+  const pesoPrioridad = (
+    prioridad: PrioridadReporte,
+  ): number => {
+    switch (prioridad) {
+      case 'Urgente':
+        return 4;
+
+      case 'Alta':
+        return 3;
+
+      case 'Media':
+        return 2;
+
+      default:
+        return 1;
+    }
+  };
+
+  const pesoAfectacion = (
+    severidad: Reporte['severidad'],
+  ): number => {
+    switch (severidad) {
+      case 'Alta':
+        return 3;
+
+      case 'Media':
+        return 2;
+
+      default:
+        return 1;
+    }
+  };
+
+  const reportesFiltrados =
+    useMemo(() => {
+      const termino =
+        normalizarBusqueda(busqueda);
+
+      const filtrados =
+        reportes.filter((reporte) => {
+          const cantidad =
+            cantidadReportesDe(
+              reporte,
+            );
+
+          const prioridad =
+            obtenerPrioridad(
+              reporte,
+            );
+
+          const textosGrupo =
+            reporte.reportesCiudadanos
+              ?.flatMap(
+                (ciudadano) => [
+                  ciudadano.folio,
+                  ciudadano.descripcion,
+                ],
+              )
+              .join(' ') ?? '';
+
+          const textoBusqueda =
+            normalizarBusqueda(
+              [
+                reporte.folio,
+                reporte.calle,
+                reporte.entreCalles,
+                reporte.colonia,
+                reporte.descripcion,
+                textosGrupo,
+              ]
+                .filter(Boolean)
+                .join(' '),
+            );
+
+          const coincideBusqueda =
+            !termino ||
+            textoBusqueda.includes(
+              termino,
+            );
+
+          const coincideEstado =
+            filtroEstado === 'Todos' ||
+            reporte.estado ===
+              filtroEstado;
+
+          const coincideAfectacion =
+            filtroAfectacion ===
+              'Todas' ||
+            textoAfectacion(
+              reporte.severidad,
+            ) === filtroAfectacion;
+
+          const coincidePrioridad =
+            filtroPrioridad ===
+              'Todas' ||
+            prioridad ===
+              filtroPrioridad;
+
+          let coincideCantidad =
+            true;
+
+          if (
+            filtroCantidad === '2+'
+          ) {
+            coincideCantidad =
+              cantidad >= 2;
+          }
+
+          if (
+            filtroCantidad === '4+'
+          ) {
+            coincideCantidad =
+              cantidad >= 4;
+          }
+
+          if (
+            filtroCantidad === '7+'
+          ) {
+            coincideCantidad =
+              cantidad >= 7;
+          }
+
+          return (
+            coincideBusqueda &&
+            coincideEstado &&
+            coincideAfectacion &&
+            coincidePrioridad &&
+            coincideCantidad
+          );
+        });
+
+      return [...filtrados].sort(
+        (a, b) => {
+          switch (ordenReportes) {
+            case 'antiguos':
+              return (
+                new Date(
+                  a.fechaReporte,
+                ).getTime() -
+                new Date(
+                  b.fechaReporte,
+                ).getTime()
+              );
+
+            case 'reportados':
+              return (
+                cantidadReportesDe(b) -
+                cantidadReportesDe(a)
+              );
+
+            case 'prioridad':
+              return (
+                pesoPrioridad(
+                  obtenerPrioridad(b),
+                ) -
+                pesoPrioridad(
+                  obtenerPrioridad(a),
+                )
+              );
+
+            case 'afectacion':
+              return (
+                pesoAfectacion(
+                  b.severidad,
+                ) -
+                pesoAfectacion(
+                  a.severidad,
+                )
+              );
+
+            default:
+              return (
+                new Date(
+                  b.fechaReporte,
+                ).getTime() -
+                new Date(
+                  a.fechaReporte,
+                ).getTime()
+              );
+          }
+        },
+      );
+    }, [
+      reportes,
+      busqueda,
+      filtroEstado,
+      filtroAfectacion,
+      filtroPrioridad,
+      filtroCantidad,
+      ordenReportes,
+    ]);
+
   const estadisticas = useMemo(() => {
     return {
       total:
@@ -409,7 +847,7 @@ export default function AdminPage() {
   }, [reportes]);
 
   const reportesSeguimiento =
-    reportes.filter(
+    reportesFiltrados.filter(
       (reporte) =>
         reporte.estado !== 'Atendido',
     );
@@ -472,7 +910,9 @@ export default function AdminPage() {
                 <th>Foto</th>
                 <th>Folio</th>
                 <th>Ubicación</th>
-                <th>Severidad</th>
+                <th>Reportes</th>
+                <th>Afectación</th>
+                <th>Prioridad</th>
                 <th>
                   Responsable de reparación
                 </th>
@@ -538,10 +978,94 @@ export default function AdminPage() {
                   </td>
 
                   <td>
+                    <details className="grouped-reports">
+                      <summary>
+                        <strong>
+                          {cantidadReportesDe(
+                            reporte,
+                          )}
+                        </strong>{' '}
+                        {cantidadReportesDe(
+                          reporte,
+                        ) === 1
+                          ? 'reporte'
+                          : 'reportes'}
+                      </summary>
+
+                      <div className="grouped-reports-list">
+                        {(
+                          reporte.reportesCiudadanos ??
+                          []
+                        ).map(
+                          (
+                            ciudadano,
+                            indice,
+                          ) => (
+                            <article
+                              key={
+                                ciudadano.id
+                              }
+                              className="grouped-report-item"
+                            >
+                              <div className="grouped-report-head">
+                                <strong>
+                                  Reporte{' '}
+                                  {indice + 1}
+                                </strong>
+
+                                <span>
+                                  {
+                                    ciudadano.folio
+                                  }
+                                </span>
+                              </div>
+
+                              <p>
+                                {
+                                  ciudadano.descripcion
+                                }
+                              </p>
+
+                              <small>
+                                Afectación:{' '}
+                                {textoAfectacion(
+                                  ciudadano.severidad,
+                                )}
+                              </small>
+
+                              <small>
+                                {new Date(
+                                  ciudadano.fechaReporte,
+                                ).toLocaleDateString(
+                                  'es-MX',
+                                )}
+                              </small>
+                            </article>
+                          ),
+                        )}
+                      </div>
+                    </details>
+                  </td>
+
+                  <td>
                     <span
                       className={`severity severity-${reporte.severidad.toLowerCase()}`}
                     >
-                      {reporte.severidad}
+                      {textoAfectacion(
+                        reporte.severidad,
+                      )}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span
+                      className={`priority-badge priority-${obtenerPrioridad(
+                        reporte,
+                      ).toLowerCase()}`}
+                    >
+                      {obtenerPrioridad(
+                        reporte,
+                      )}
                     </span>
                   </td>
 
@@ -656,7 +1180,7 @@ export default function AdminPage() {
                       </option>
 
                       <option value="En Proceso">
-                        En Proceso
+                        Pendiente
                       </option>
 
                       <option value="Atendido">
@@ -769,7 +1293,7 @@ export default function AdminPage() {
                 )
               }
             >
-              Seguimiento
+              Monitoreo
             </button>
 
             <button
@@ -802,14 +1326,6 @@ export default function AdminPage() {
               Mapa
             </button>
 
-            <button
-              type="button"
-              onClick={() =>
-                navigate('/')
-              }
-            >
-              Portal ciudadano
-            </button>
           </nav>
         </aside>
 
@@ -847,58 +1363,42 @@ export default function AdminPage() {
 
               <section className="admin-stats">
                 <article>
-                  <span>
-                    Total de reportes
-                  </span>
-
-                  <strong>
-                    {estadisticas.total}
-                  </strong>
-
-                  <small>
-                    Registrados en el sistema
-                  </small>
-                </article>
-
-                <article>
-                  <span>
-                    Reportados
-                  </span>
-
+                  <span>Reportados</span>
                   <strong>
                     {estadisticas.reportados}
                   </strong>
-
                   <small>
-                    Pendientes de atención
+                    <span className="admin-indicador-descripcion">Recibidos en el sistema</span>
                   </small>
                 </article>
 
                 <article>
-                  <span>
-                    En proceso
-                  </span>
-
+                  <span>Pendientes</span>
                   <strong>
                     {estadisticas.proceso}
                   </strong>
-
                   <small>
-                    Actualmente en reparación
+                    <span className="admin-indicador-descripcion">En atención</span>
                   </small>
                 </article>
 
                 <article>
-                  <span>
-                    Atendidos
-                  </span>
-
+                  <span>Atendidos</span>
                   <strong>
                     {estadisticas.atendidos}
                   </strong>
-
                   <small>
-                    Reportes finalizados
+                    <span className="admin-indicador-descripcion">Reportes finalizados</span>
+                  </small>
+                </article>
+
+                <article>
+                  <span>Total de reportes</span>
+                  <strong>
+                    {estadisticas.total}
+                  </strong>
+                  <small>
+                    <span className="admin-indicador-descripcion">Registrados en el sistema</span>
                   </small>
                 </article>
               </section>
@@ -910,11 +1410,11 @@ export default function AdminPage() {
               <div className="admin-section-header">
                 <div>
                   <p className="admin-eyebrow">
-                    REPORTES CIUDADANOS
+                    BACHES REGISTRADOS
                   </p>
 
                   <h2>
-                    Todos los reportes
+                    Reportes agrupados por bache
                   </h2>
                 </div>
 
@@ -927,8 +1427,202 @@ export default function AdminPage() {
                 </button>
               </div>
 
+              <div className="report-filter-panel">
+                <div className="report-search-box">
+                  <label htmlFor="buscar-reportes">
+                    Buscar reporte
+                  </label>
+
+                  <input
+                    id="buscar-reportes"
+                    type="search"
+                    value={busqueda}
+                    onChange={(evento) =>
+                      setBusqueda(
+                        evento.target.value,
+                      )
+                    }
+                    placeholder="Folio, calle, colonia o descripción..."
+                  />
+                </div>
+
+                <div className="report-filter-grid">
+                  <label>
+                    <span>Estado</span>
+                    <select
+                      value={filtroEstado}
+                      onChange={(evento) =>
+                        setFiltroEstado(
+                          evento.target.value,
+                        )
+                      }
+                    >
+                      <option value="Todos">
+                        Todos
+                      </option>
+                      <option value="Reportado">
+                        Reportado
+                      </option>
+                      <option value="En Proceso">
+                        Pendiente
+                      </option>
+                      <option value="Atendido">
+                        Atendido
+                      </option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Afectación</span>
+                    <select
+                      value={filtroAfectacion}
+                      onChange={(evento) =>
+                        setFiltroAfectacion(
+                          evento.target.value,
+                        )
+                      }
+                    >
+                      <option value="Todas">
+                        Todas
+                      </option>
+                      <option value="Leve">
+                        Leve
+                      </option>
+                      <option value="Moderada">
+                        Moderada
+                      </option>
+                      <option value="Crítica">
+                        Crítica
+                      </option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Prioridad</span>
+                    <select
+                      value={filtroPrioridad}
+                      onChange={(evento) =>
+                        setFiltroPrioridad(
+                          evento.target.value,
+                        )
+                      }
+                    >
+                      <option value="Todas">
+                        Todas
+                      </option>
+                      <option value="Normal">
+                        Normal
+                      </option>
+                      <option value="Media">
+                        Media
+                      </option>
+                      <option value="Alta">
+                        Alta
+                      </option>
+                      <option value="Urgente">
+                        Urgente
+                      </option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Reportes recibidos</span>
+                    <select
+                      value={filtroCantidad}
+                      onChange={(evento) =>
+                        setFiltroCantidad(
+                          evento.target.value,
+                        )
+                      }
+                    >
+                      <option value="Todos">
+                        Todos
+                      </option>
+                      <option value="2+">
+                        2 o más
+                      </option>
+                      <option value="4+">
+                        4 o más
+                      </option>
+                      <option value="7+">
+                        7 o más
+                      </option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Ordenar por</span>
+                    <select
+                      value={ordenReportes}
+                      onChange={(evento) =>
+                        setOrdenReportes(
+                          evento.target
+                            .value as OrdenReportes,
+                        )
+                      }
+                    >
+                      <option value="recientes">
+                        Más recientes
+                      </option>
+                      <option value="antiguos">
+                        Más antiguos
+                      </option>
+                      <option value="reportados">
+                        Más reportados
+                      </option>
+                      <option value="prioridad">
+                        Mayor prioridad
+                      </option>
+                      <option value="afectacion">
+                        Mayor afectación
+                      </option>
+                    </select>
+                  </label>
+                </div>
+
+                <div className="report-filter-footer">
+                  <div>
+                    <strong>
+                      {reportesFiltrados.length}
+                    </strong>{' '}
+                    {reportesFiltrados.length === 1
+                      ? 'bache encontrado'
+                      : 'baches encontrados'}
+
+                    <span>
+                      {' · '}
+                      {reportesFiltrados.reduce(
+                        (total, reporte) =>
+                          total +
+                          cantidadReportesDe(
+                            reporte,
+                          ),
+                        0,
+                      )}{' '}
+                      reportes ciudadanos
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBusqueda('');
+                      setFiltroEstado('Todos');
+                      setFiltroAfectacion('Todas');
+                      setFiltroPrioridad('Todas');
+                      setFiltroCantidad('Todos');
+                      setOrdenReportes(
+                        'recientes',
+                      );
+                    }}
+                  >
+                    Limpiar filtros
+                  </button>
+                </div>
+              </div>
+
               {renderTabla(
-                reportes,
+                reportesFiltrados,
               )}
             </section>
           )}
@@ -938,11 +1632,11 @@ export default function AdminPage() {
               <div className="admin-section-header">
                 <div>
                   <p className="admin-eyebrow">
-                    SEGUIMIENTO
+                    MONITOREO
                   </p>
 
                   <h2>
-                    Reportes pendientes
+                    Baches pendientes
                   </h2>
                 </div>
               </div>
@@ -1113,6 +1807,31 @@ export default function AdminPage() {
                               'No registrado'
                             }
                           </p>
+                          <div className="team-card-actions">
+                            <button
+                              type="button"
+                              className="team-edit-button"
+                              onClick={() =>
+                                iniciarEdicionCuadrilla(
+                                  cuadrilla,
+                                )
+                              }
+                            >
+                              Modificar
+                            </button>
+
+                            <button
+                              type="button"
+                              className="team-delete-button"
+                              onClick={() =>
+                                void eliminarCuadrilla(
+                                  cuadrilla,
+                                )
+                              }
+                            >
+                              Eliminar
+                            </button>
+                          </div>
                         </article>
                       ),
                     )
@@ -1134,4 +1853,15 @@ export default function AdminPage() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
 

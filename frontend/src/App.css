@@ -1,5 +1,4 @@
-﻿import ReporteForm from './components/ReporteForm';
-
+﻿
 :root {
   --vino: #691c32;
   --vino-oscuro: #4f1526;
@@ -689,3 +688,45 @@ input {
   height: 6px;
   background: #235b4e;
 }
+
+/* CONSULTA SUPERIOR */
+
+.hero-card.hero-consulta {
+  align-self: stretch;
+  padding: 28px;
+  border-top: 5px solid #235b4e;
+}
+
+.hero-consulta .consult-panel {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.hero-consulta .consult-panel h2 {
+  margin-top: 7px;
+  font-size: 27px;
+}
+
+.hero-consulta .folio-search {
+  width: 100%;
+}
+
+.hero-consulta .consulta-resultado {
+  max-height: 470px;
+  overflow-y: auto;
+}
+
+.quick-actions-single {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 850px) {
+  .hero-card.hero-consulta {
+    padding: 22px;
+  }
+}
+

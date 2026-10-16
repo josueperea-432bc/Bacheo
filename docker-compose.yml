@@ -3,14 +3,13 @@
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3000
     container_name: sistema_baches_frontend
     ports:
       - "5174:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    environment:
-      CHOKIDAR_USEPOLLING: "true"
+    depends_on:
+      - backend
 
   backend:
     build:
@@ -19,16 +18,14 @@
     container_name: sistema_baches_backend
     ports:
       - "3000:3000"
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
     environment:
-      CHOKIDAR_USEPOLLING: "true"
       DB_HOST: db
       DB_PORT: "3306"
       DB_USERNAME: baches
       DB_PASSWORD: baches123
       DB_DATABASE: sistema_baches
+    volumes:
+      - ./backend/uploads:/app/uploads
     depends_on:
       db:
         condition: service_healthy
@@ -47,7 +44,16 @@
     volumes:
       - baches_db_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-uroot",
+          "-proot"
+        ]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -60,7 +66,7 @@
       - db
     environment:
       PMA_HOST: db
-      PMA_PORT: 3306
+      PMA_PORT: "3306"
       PMA_USER: baches
       PMA_PASSWORD: baches123
     ports:

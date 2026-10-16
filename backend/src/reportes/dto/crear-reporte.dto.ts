@@ -1,13 +1,11 @@
 ﻿import {
   IsEmail,
-  IsEnum,
   IsLatitude,
   IsLongitude,
   IsOptional,
   IsString,
   MaxLength,
 } from 'class-validator';
-import { SeveridadReporte } from '../reporte.entity';
 
 export class CrearReporteDto {
   @IsOptional()
@@ -47,8 +45,6 @@ export class CrearReporteDto {
   @MaxLength(250)
   descripcion: string;
 
-  @IsEnum(SeveridadReporte)
-  severidad: SeveridadReporte;
 
   @IsOptional()
   @IsString()

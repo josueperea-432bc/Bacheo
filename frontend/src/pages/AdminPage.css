@@ -627,3 +627,285 @@
     grid-template-columns: 1fr;
   }
 }
+
+.report-group-count {
+  margin-top: 5px;
+  display: block;
+  color: #235b4e;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* Acciones de administración de cuadrillas */
+
+.team-card-actions {
+  margin-top: 18px;
+  padding-top: 14px;
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid #e2e2e2;
+}
+
+.team-card-actions button {
+  min-height: 38px;
+  padding: 0 16px;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.team-edit-button {
+  border: 1px solid #235b4e;
+  background: #ffffff;
+  color: #235b4e;
+}
+
+.team-edit-button:hover {
+  background: #edf5f3;
+}
+
+.team-delete-button {
+  border: 1px solid #8a1838;
+  background: #ffffff;
+  color: #8a1838;
+}
+
+.team-delete-button:hover {
+  background: #f8e9ed;
+}
+
+.team-form-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.team-form-actions .team-cancel-button {
+  border: 1px solid #777777;
+  background: #ffffff;
+  color: #555555;
+}
+
+.team-form-actions .team-cancel-button:hover {
+  background: #eeeeee;
+}
+
+
+/* Buscador y filtros de reportes */
+
+.report-filter-panel {
+  margin: 18px 0 22px;
+  padding: 18px;
+  border: 1px solid #dedede;
+  border-radius: 5px;
+  background: #ffffff;
+}
+
+.report-search-box {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 15px;
+}
+
+.report-search-box label,
+.report-filter-grid span {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.report-search-box input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  font: inherit;
+}
+
+.report-filter-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(150px, 1fr)
+    );
+  gap: 12px;
+}
+
+.report-filter-grid label {
+  display: grid;
+  gap: 7px;
+}
+
+.report-filter-grid select {
+  min-height: 40px;
+  padding: 0 9px;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  background: #ffffff;
+  font: inherit;
+}
+
+.report-filter-footer {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #ececec;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  font-size: 13px;
+}
+
+.report-filter-footer span {
+  color: #666666;
+}
+
+.report-filter-footer button {
+  padding: 8px 14px;
+  border: 1px solid #611232;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #611232;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.report-filter-footer button:hover {
+  background: #f6edf1;
+}
+
+@media (max-width: 700px) {
+  .report-filter-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+
+/* Reportes agrupados del mismo bache */
+
+.grouped-reports {
+  min-width: 125px;
+}
+
+.grouped-reports summary {
+  cursor: pointer;
+  color: #611232;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.grouped-reports summary::marker {
+  color: #611232;
+}
+
+.grouped-reports-list {
+  width: 310px;
+  max-height: 320px;
+  margin-top: 10px;
+  overflow-y: auto;
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+  background: #ffffff;
+}
+
+.grouped-report-item {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.grouped-report-item:last-child {
+  border-bottom: 0;
+}
+
+.grouped-report-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.grouped-report-head strong {
+  color: #611232;
+  font-size: 12px;
+}
+
+.grouped-report-head span {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.grouped-report-item p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.grouped-report-item small {
+  color: #666666;
+  font-size: 11px;
+}
+
+/* Prioridad calculada */
+
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.priority-normal {
+  background: #edf4f1;
+  color: #235b4e;
+}
+
+.priority-media {
+  background: #f7f0db;
+  color: #715819;
+}
+
+.priority-alta {
+  background: #f6e4d8;
+  color: #9a431c;
+}
+
+.priority-urgente {
+  background: #f5dfe6;
+  color: #7b1535;
+}
+
+
+/* --- Mejora de legibilidad en resumen administrativo --- */
+.admin-resumen-descripcion {
+  display: inline-block;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #4b5563;
+}
+
+.admin-indicador-descripcion {
+  display: inline-block;
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #5b6470;
+}
+
+/* opcional: un poco más de presencia visual debajo de los números */
+article .admin-indicador-descripcion {
+  margin-top: 0.2rem;
+}

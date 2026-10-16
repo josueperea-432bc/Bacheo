@@ -8,6 +8,8 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { API_URL } from '../config';
+import { textoAfectacion } from '../utils/afectacion';
+import GestionCuadrillasRevisor from '../components/GestionCuadrillasRevisor';
 import './RevisorPage.css';
 
 type EstadoReporte =
@@ -59,7 +61,16 @@ interface Reporte {
   fechaReporte: string;
   fechaAtencion: string | null;
   cuadrilla: Cuadrilla | null;
-  evidencias: Evidencia[];
+    evidencias: Evidencia[];
+  cantidadReportes?: number;
+  reportesCiudadanos?: {
+    id: number;
+    folio: string;
+    descripcion: string;
+    fotografia: string | null;
+    fechaReporte: string;
+    severidad: 'Alta' | 'Media' | 'Baja';
+  }[];
 }
 
 export default function RevisorPage() {
@@ -479,6 +490,8 @@ export default function RevisorPage() {
         </div>
       </header>
 
+            <GestionCuadrillasRevisor />
+
       <main className="review-layout">
         <aside className="review-inbox">
           <div className="review-inbox-header">
@@ -616,8 +629,8 @@ export default function RevisorPage() {
                     </span>
 
                     <small>
-                      Severidad{' '}
-                      {reporte.severidad}
+                      Afectación{' '}
+                      {textoAfectacion(reporte.severidad)}
                     </small>
 
                     {reporte.cuadrilla && (
@@ -789,7 +802,7 @@ export default function RevisorPage() {
 
                     <div>
                       <dt>
-                        Severidad
+                        Afectación
                       </dt>
 
                       <dd>
@@ -917,18 +930,80 @@ export default function RevisorPage() {
               </div>
 
               <article className="review-card description-card">
-                <h3>
-                  Descripción
-                </h3>
+                  <div className="group-comments-heading">
+                    <div>
+                      <p>
+                        PARTICIPACIÓN CIUDADANA
+                      </p>
 
-                <p>
-                  {
-                    seleccionado.descripcion
-                  }
-                </p>
-              </article>
+                      <h3>
+                        Reportes del mismo bache
+                      </h3>
+                    </div>
 
-              <article className="review-card team-card-review">
+                    <span>
+                      {seleccionado.cantidadReportes ?? 1}
+                      {' '}
+                      reporte(s)
+                    </span>
+                  </div>
+
+                  {seleccionado.reportesCiudadanos &&
+                  seleccionado.reportesCiudadanos.length > 0 ? (
+                    <div className="citizen-comments">
+                      {seleccionado.reportesCiudadanos.map(
+                        (reporteCiudadano) => (
+                          <article
+                            className="citizen-comment"
+                            key={reporteCiudadano.id}
+                          >
+                            <div className="citizen-comment-header">
+                              <strong>
+                                {reporteCiudadano.folio}
+                              </strong>
+
+                              <span>
+                                {textoAfectacion(
+                                  reporteCiudadano.severidad,
+                                )}
+                              </span>
+                            </div>
+
+                            <small>
+                              {new Date(
+                                reporteCiudadano.fechaReporte,
+                              ).toLocaleString(
+                                'es-MX',
+                              )}
+                            </small>
+
+                            <p>
+                              {
+                                reporteCiudadano.descripcion
+                              }
+                            </p>
+
+                            {reporteCiudadano.fotografia && (
+                              <a
+                                href={`${API_URL}/${reporteCiudadano.fotografia}`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                Ver fotografía del reporte
+                              </a>
+                            )}
+                          </article>
+                        ),
+                      )}
+                    </div>
+                  ) : (
+                    <p>
+                      {seleccionado.descripcion}
+                    </p>
+                  )}
+                </article>
+
+                <article className="review-card team-card-review">
                 <h3>
                   Cuadrilla asignada
                 </h3>
@@ -1180,4 +1255,8 @@ export default function RevisorPage() {
     </div>
   );
 }
+
+
+
+
 
